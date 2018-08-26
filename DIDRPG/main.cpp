@@ -40,34 +40,24 @@ struct Tester {
 };
 
 Tester test;
+constexpr size_t N = 10, M = 10000;
+
+void item_test(Creature& c, const ItemClass& cls) {
+	size_t x = M;
+	while (x--)
+		c.addItem(cls);
+	x = M;
+	while (x--) {
+		c.removeItem(cls);
+		c.turn();
+	}
+}
 
 int main() {
 	Creature c;
-	size_t N = 1000, M = 10;
-	c._protection = 1; // not to recount
+	Poison p;
+	SmartPoison sp;
 
-	test << N << [&] {
-		Poison p;
-
-		size_t x = M;
-		while (x--)
-			c.addItem(p);
-		x = M;
-		while (x--) {
-			c.removeItem(p);
-			c.turn();
-		}
-	} << [&] {
-		SmartPoison p;
-
-		size_t x = M;
-		while (x--)
-			c.addItem(p);
-		x = M;
-		while (x--) {
-			c.removeItem(p);
-			c.turn();
-		}
-	};
+	test << N << std::bind(item_test, c, p) << std::bind(item_test, c, sp);
 	return 0;
 }

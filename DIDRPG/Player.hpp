@@ -194,7 +194,7 @@ struct Creature: CreatureBase {
 	}
 	void turn() {
 		if (ShouldRecount<Field::Damage>()) recount<Field::Damage>();
-		if (ShouldRecount<Field::Protection>()) recount<Field::Protection>();
+		// if (ShouldRecount<Field::Protection>()) recount<Field::Protection>();
 	}
 };
 
