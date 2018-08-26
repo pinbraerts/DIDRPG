@@ -14,7 +14,7 @@ struct SmartPoison : ItemClassHelper<SmartPoison> {
 		damage += 10;
 	}
 	void ReverseDamage(float& damage) const {
-		damage += 10;
+		damage -= 10;
 	}
 };
 
