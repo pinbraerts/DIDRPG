@@ -122,7 +122,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Callable.hpp" />
+    <ClInclude Include="includes.hpp" />
+    <ClInclude Include="Item.hpp" />
+    <ClInclude Include="Creature.hpp" />
+    <ClInclude Include="Test.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
