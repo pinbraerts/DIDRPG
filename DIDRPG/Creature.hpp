@@ -35,24 +35,24 @@ template<class T> bool operator<(std::reference_wrapper<T> x, std::reference_wra
 	return x.get() < y.get();
 }
 
-using Inventory = std::map <std::reference_wrapper<const ItemClass>, size_t>;
+using Inventory = std::map<std::reference_wrapper<const ItemClass>, size_t>;
 
 struct Creature: CreatureBase {
 	Inventory inventory;
 
-	template<Field f>
+	template<Field f> inline
 	void tryApply(const ItemClass& cls) {
 		if (cls.IsChanging<f>())
 			cls.Apply<f>(get<f>());
 	}
 
-	template<Field f>
+	template<Field f> inline
 	void recount() {
 		for (auto item : inventory)
 			tryApply<f>(item.first);
 	}
 
-	template<Field f>
+	template<Field f> inline
 	void tryReverse(const ItemClass& cls) {
 		if (ShouldRecount<f>()) return;
 		if (cls.CanReverse<f>())
