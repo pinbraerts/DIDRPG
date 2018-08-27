@@ -2,12 +2,12 @@
 
 #include "Test.hpp"
 
-struct Poison : ItemClassHelper<Poison> {
+struct Poison : EffectHelper<Poison> {
 	void ApplyDamage(float& damage) const {
 		damage += 10;
 	}
 };
-struct SmartPoison : ItemClassHelper<SmartPoison> {
+struct SmartPoison : EffectHelper<SmartPoison> {
 	void ApplyDamage(float& damage) const {
 		damage += 10;
 	}
@@ -18,7 +18,7 @@ struct SmartPoison : ItemClassHelper<SmartPoison> {
 
 constexpr size_t N = 10, M = 10000;
 
-void item_test(Creature& c, const ItemClass& cls) {
+void item_test(Creature& c, const Effect& cls) {
 	size_t x = M;
 	while (x--)
 		c.addItem(cls);
