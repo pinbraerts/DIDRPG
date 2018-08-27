@@ -124,7 +124,7 @@
   <ItemGroup>
     <ClInclude Include="Callable.hpp" />
     <ClInclude Include="includes.hpp" />
-    <ClInclude Include="Item.hpp" />
+    <ClInclude Include="Effect.hpp" />
     <ClInclude Include="Creature.hpp" />
     <ClInclude Include="Test.hpp" />
   </ItemGroup>

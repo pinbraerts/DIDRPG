@@ -1,16 +1,16 @@
-#ifndef ITEM_HPP
-#define ITEM_HPP
+#ifndef EFFECT_HPP
+#define EFFECT_HPP
 
 #include "includes.hpp"
 
-struct ItemClass {
-	template<size_t offset> using Changer = Callable<const ItemClass, offset, void, float&>;
+struct Effect {
+	template<size_t offset> using Changer = Callable<const Effect, offset, void, float&>;
 
 private:
 	Changer<0> ApplyDamage;
-	Changer<sizeof(ItemClass::ApplyDamage)> ApplyProtection;
-	Changer<sizeof(ItemClass::ApplyDamage) + sizeof(ItemClass::ApplyProtection)> ReverseDamage;
-	Changer<sizeof(ItemClass::ApplyDamage) + sizeof(ItemClass::ApplyProtection) + sizeof(ItemClass::ReverseDamage)> ReverseProtection;
+	Changer<sizeof(Effect::ApplyDamage)> ApplyProtection;
+	Changer<sizeof(Effect::ApplyDamage) + sizeof(Effect::ApplyProtection)> ReverseDamage;
+	Changer<sizeof(Effect::ApplyDamage) + sizeof(Effect::ApplyProtection) + sizeof(Effect::ReverseDamage)> ReverseProtection;
 
 public:
 	template<Field f> bool IsChanging() const;
@@ -45,40 +45,40 @@ public:
 		return ReverseProtection(field);
 	}
 
-	ItemClass(decltype(ApplyDamage) a = nullptr, decltype(ApplyProtection) b = nullptr, decltype(ReverseDamage) c = nullptr, decltype(ReverseProtection) d = nullptr) :
+	Effect(decltype(ApplyDamage) a = nullptr, decltype(ApplyProtection) b = nullptr, decltype(ReverseDamage) c = nullptr, decltype(ReverseProtection) d = nullptr) :
 		ApplyDamage(a), ApplyProtection(b),
 		ReverseDamage(c), ReverseProtection(d) {}
 
-	bool operator<(const ItemClass& other) const {
+	bool operator<(const Effect& other) const {
 		return this < &other;
 	}
 };
 
-template<class Origin> struct ItemClassHelper : ItemClass {
+template<class Origin> struct EffectHelper : Effect {
 	void ApplyDamage(float&) const {}
 	void ApplyProtection(float&) const {}
 	void ReverseDamage(float&) const {}
 	void ReverseProtection(float&) const {}
 
-	static void _CApplyDamage(const ItemClass& self, float& f) {
+	static void _CApplyDamage(const Effect& self, float& f) {
 		static_cast<const Origin&>(self).ApplyDamage(f);
 	}
-	static void _CApplyProtection(const ItemClass& self, float& f) {
+	static void _CApplyProtection(const Effect& self, float& f) {
 		static_cast<const Origin&>(self).ApplyProtection(f);
 	}
-	static void _CReverseDamage(const ItemClass& self, float& f) {
+	static void _CReverseDamage(const Effect& self, float& f) {
 		static_cast<const Origin&>(self).ReverseDamage(f);
 	}
-	static void _CReverseProtection(const ItemClass& self, float& f) {
+	static void _CReverseProtection(const Effect& self, float& f) {
 		static_cast<const Origin&>(self).ReverseProtection(f);
 	}
 
-	ItemClassHelper() : ItemClass(
-		&Origin::ApplyDamage != &ItemClassHelper::ApplyDamage ? &_CApplyDamage : nullptr,
-		&Origin::ApplyProtection != &ItemClassHelper::ApplyProtection ? &_CApplyProtection : nullptr,
-		&Origin::ReverseDamage != &ItemClassHelper::ReverseDamage ? &_CReverseDamage : nullptr,
-		&Origin::ReverseProtection != &ItemClassHelper::ReverseProtection ? &_CReverseProtection : nullptr
+	EffectHelper() : Effect(
+		&Origin::ApplyDamage != &EffectHelper::ApplyDamage ? &_CApplyDamage : nullptr,
+		&Origin::ApplyProtection != &EffectHelper::ApplyProtection ? &_CApplyProtection : nullptr,
+		&Origin::ReverseDamage != &EffectHelper::ReverseDamage ? &_CReverseDamage : nullptr,
+		&Origin::ReverseProtection != &EffectHelper::ReverseProtection ? &_CReverseProtection : nullptr
 	) {}
 };
 
-#endif // !ITEM_HPP
+#endif // !EFFECT_HPP

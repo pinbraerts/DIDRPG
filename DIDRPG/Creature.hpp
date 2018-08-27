@@ -6,7 +6,7 @@
 
 #include "includes.hpp"
 #include "Callable.hpp"
-#include "Item.hpp"
+#include "Effect.hpp"
 
 struct CreatureBase {
 	float health = 100;
@@ -35,13 +35,13 @@ template<class T> bool operator<(std::reference_wrapper<T> x, std::reference_wra
 	return x.get() < y.get();
 }
 
-using Inventory = std::map<std::reference_wrapper<const ItemClass>, size_t>;
+using Inventory = std::map<std::reference_wrapper<const Effect>, size_t>;
 
 struct Creature: CreatureBase {
 	Inventory inventory;
 
 	template<Field f> inline
-	void tryApply(const ItemClass& cls) {
+	void tryApply(const Effect& cls) {
 		if (cls.IsChanging<f>())
 			cls.Apply<f>(get<f>());
 	}
@@ -53,20 +53,20 @@ struct Creature: CreatureBase {
 	}
 
 	template<Field f> inline
-	void tryReverse(const ItemClass& cls) {
+	void tryReverse(const Effect& cls) {
 		if (ShouldRecount<f>()) return;
 		if (cls.CanReverse<f>())
 			cls.Reverse<f>(get<f>());
 		else SetRecount<f>();
 	}
 
-	void addItem(const ItemClass& item) {
+	void addItem(const Effect& item) {
 		inventory[std::ref(item)] += 1;
 
 		tryApply<Field::Damage>(item);
 		tryApply<Field::Protection>(item);
 	}
-	void removeItem(const ItemClass& cls) {
+	void removeItem(const Effect& cls) {
 		auto it = inventory.find(cls);
 		if (it != inventory.end() && (--it->second) == 0)
 			inventory.erase(it);
